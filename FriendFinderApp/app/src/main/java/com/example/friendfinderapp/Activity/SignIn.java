@@ -1,25 +1,22 @@
 package com.example.friendfinderapp.Activity;
 
-import androidx.appcompat.app.AppCompatActivity;
-
 import android.content.Intent;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.appcompat.app.AppCompatActivity;
+
 import com.example.friendfinderapp.API.APIRequestData;
 import com.example.friendfinderapp.API.RetroServer;
-import com.example.friendfinderapp.Fragment.HomeFragment;
+import com.example.friendfinderapp.Home;
+import com.example.friendfinderapp.HomeFragment;
 import com.example.friendfinderapp.Model.ResponseModel;
 import com.example.friendfinderapp.Model.User_Model;
 import com.example.friendfinderapp.R;
-
-import org.json.JSONArray;
-import org.json.JSONObject;
 
 import java.util.List;
 
@@ -73,13 +70,13 @@ public class SignIn extends AppCompatActivity {
     private void login(String email, String password) {
         APIRequestData apiData = RetroServer.konekRetro().create(APIRequestData.class);
         Call<ResponseModel> Signin = apiData.resLogin(email, password);
-        Signin.enqueue(new Callback<>() {
+        Signin.enqueue(new Callback<ResponseModel>() {
             @Override
             public void onResponse(Call<ResponseModel> call, Response<ResponseModel> response) {
 
                 // get data user by email
                 Call<ResponseModel> userData = apiData.ardGetDataUserByEmail(email);
-                userData.enqueue(new Callback<>() {
+                userData.enqueue(new Callback<ResponseModel>() {
                     @Override
                     public void onResponse(Call<ResponseModel> call, Response<ResponseModel> response) {
                         String pesan = response.body().getPesan();

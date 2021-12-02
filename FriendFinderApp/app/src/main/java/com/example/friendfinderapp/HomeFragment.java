@@ -1,40 +1,50 @@
 package com.example.friendfinderapp;
 
 import android.app.Activity;
-import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.ViewGroup;
+import android.widget.TextView;
+import android.widget.Toast;
 
-import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
-import androidx.fragment.app.FragmentManager;
-import androidx.fragment.app.FragmentTransaction;
 import androidx.navigation.NavController;
 import androidx.navigation.Navigation;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import android.view.LayoutInflater;
-import android.view.View;
-import android.view.ViewGroup;
-import android.widget.LinearLayout;
-import android.widget.TextView;
-import android.widget.Toast;
+import com.android.volley.Request;
+import com.android.volley.toolbox.StringRequest;
+import com.android.volley.toolbox.Volley;
+
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import java.util.ArrayList;
+import java.util.List;
 
 /**
  * A simple {@link Fragment} subclass.
  * Use the  factory method to
  * create an instance of this fragment.
  */
-public class HomeFragment extends Fragment implements EventAdapter.OnEventListener{
+public class HomeFragment extends Fragment implements EventAdapter.OnEventListener {
 
-    private ArrayList<ThumbnailEvent> thumbnailEvents;
+    private List<ThumbnailEvent> thumbnailEvents = new ArrayList<>();
     private ArrayList<Category> categories;
-    private ArrayList<Event> events;
+    private List<Event> events = new ArrayList<>();
     private ArrayList<ThumbnailPlace> thumbnailPlaces;
-    private TextView txt_link_seeAll_event;
+
+    // recycler view init
+    RecyclerView recyclerViewEvent, recyclerViewThumbnailEvent;
+
+    // url for get all event data
+    public static final String EVENT_URL = "http://192.168.1.16/friend-finder/public/API/getAllEvent";
+    public static final String THUMBNAIL_EVENT_URL = "http://192.168.1.16/friend-finder/public/API/getEventThumbnail";
+    public static String username;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -43,20 +53,19 @@ public class HomeFragment extends Fragment implements EventAdapter.OnEventListen
         View view = inflater.inflate(R.layout.fragment_home, container, false);
 
         // init
-        txt_link_seeAll_event = view.findViewById(R.id.txt_link_seeAll_event);
-        txt_link_seeAll_event.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                NavController navController = Navigation.findNavController((Activity) view.getContext(), R.id.fragment);
-                navController.navigate(R.id.homeSeeAllFragment2);
-            }
+        TextView tvNama = view.findViewById(R.id.tvNama);
+        if (username.length() > 0) {
+            tvNama.setText(username);
+        }
+        TextView txt_link_seeAll_event = view.findViewById(R.id.txt_link_seeAll_event);
+        txt_link_seeAll_event.setOnClickListener(v -> {
+            NavController navController = Navigation.findNavController((Activity) view.getContext(), R.id.fragment);
+            navController.navigate(R.id.homeSeeAllFragment2);
         });
 
         // thumbnail event
         addEventThumbnailItem();
-        RecyclerView recyclerViewThumbnailEvent = view.findViewById(R.id.recycle_view_event_thumbnail);
-        ThumbnailEventAdapter thumbnailEventAdapter = new ThumbnailEventAdapter(thumbnailEvents);
-        recyclerViewThumbnailEvent.setAdapter(thumbnailEventAdapter);
+        recyclerViewThumbnailEvent = view.findViewById(R.id.recycle_view_event_thumbnail);
         RecyclerView.LayoutManager layoutManagerThumbnailEven = new LinearLayoutManager(this.getContext(), LinearLayoutManager.HORIZONTAL, false);
         recyclerViewThumbnailEvent.setLayoutManager(layoutManagerThumbnailEven);
 
@@ -70,9 +79,7 @@ public class HomeFragment extends Fragment implements EventAdapter.OnEventListen
 
         // event class
         addEventItem();
-        RecyclerView recyclerViewEvent = view.findViewById(R.id.recycle_view_event);
-        EventAdapter eventAdapter = new EventAdapter(events, this);
-        recyclerViewEvent.setAdapter(eventAdapter);
+        recyclerViewEvent = view.findViewById(R.id.recycle_view_event);
         RecyclerView.LayoutManager layoutManagerEvent = new LinearLayoutManager(view.getContext());
         recyclerViewEvent.setLayoutManager(layoutManagerEvent);
 
@@ -91,10 +98,30 @@ public class HomeFragment extends Fragment implements EventAdapter.OnEventListen
 
     // add thumbnail event item
     private void addEventThumbnailItem() {
-        thumbnailEvents = new ArrayList<>();
-        thumbnailEvents.add(new ThumbnailEvent("Mobile Legend Tournament", "12 Desember 2021", "Sport", R.mipmap.event1));
-        thumbnailEvents.add(new ThumbnailEvent("Education Tech Titan", "21 January 2022", "Sport", R.mipmap.event2));
-        thumbnailEvents.add(new ThumbnailEvent("Hangout On Me!", "22 April 2021", "Sport", R.mipmap.event3));
+        StringRequest stringRequest = new StringRequest(Request.Method.GET, THUMBNAIL_EVENT_URL, response -> {
+            try {
+                JSONArray thumbnailEventArray = new JSONArray(response);
+                for (int i = 0; i < thumbnailEventArray.length(); i++) {
+                    JSONObject thumbnailEventsJSONObject = thumbnailEventArray.getJSONObject(i);
+                    int id = thumbnailEventsJSONObject.getInt("id");
+                    String name_event = thumbnailEventsJSONObject.getString("name_event");
+                    String event_start_date = thumbnailEventsJSONObject.getString("event_start_date");
+                    String event_picture = thumbnailEventsJSONObject.getString("event_picture");
+                    String category = thumbnailEventsJSONObject.getString("category");
+
+                    ThumbnailEvent thumbnailEvent = new ThumbnailEvent(name_event, event_start_date, category, event_picture, id);
+                    thumbnailEvents.add(thumbnailEvent);
+                }
+                ThumbnailEventAdapter thumbnailEventAdapter = new ThumbnailEventAdapter(thumbnailEvents);
+                recyclerViewThumbnailEvent.setAdapter(thumbnailEventAdapter);
+
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+
+        }, error -> Toast.makeText(getContext(), error.getMessage(), Toast.LENGTH_SHORT).show());
+
+        Volley.newRequestQueue(getContext()).add(stringRequest);
     }
 
     // add category item
@@ -108,10 +135,29 @@ public class HomeFragment extends Fragment implements EventAdapter.OnEventListen
 
     // add event item
     private void addEventItem() {
-        events = new ArrayList<>();
-        events.add(new Event("Mobile Legend Tournament", "12 Desember 2021", R.mipmap.event1));
-        events.add(new Event("Education Center", "21 Agustus 2021", R.mipmap.event2));
-        events.add(new Event("Just Hangout", "22 April 2021", R.mipmap.event3));
+        StringRequest stringRequest = new StringRequest(Request.Method.GET, EVENT_URL, response -> {
+            try {
+                JSONArray eventArray = new JSONArray(response);
+                for (int i = 0; i < eventArray.length(); i++) {
+                    JSONObject eventsJSONObject = eventArray.getJSONObject(i);
+                    int id = eventsJSONObject.getInt("id");
+                    String name_event = eventsJSONObject.getString("name_event");
+                    String event_start_date = eventsJSONObject.getString("event_start_date");
+                    String event_picture = eventsJSONObject.getString("event_picture");
+
+                    Event event = new Event(name_event, event_picture, event_start_date, id);
+                    events.add(event);
+                }
+                EventAdapter eventAdapter = new EventAdapter(events, HomeFragment.this);
+                recyclerViewEvent.setAdapter(eventAdapter);
+
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+
+        }, error -> Toast.makeText(getContext(), error.getMessage(), Toast.LENGTH_SHORT).show());
+
+        Volley.newRequestQueue(getContext()).add(stringRequest);
     }
 
     // add thumbnail place item

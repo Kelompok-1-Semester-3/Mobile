@@ -80,7 +80,7 @@ public class SignUp extends AppCompatActivity {
         APIRequestData adrData = RetroServer.konekRetro().create(APIRequestData.class);
         Call<ResponseModel> SignUp = adrData.ardAddData(fullname,phone, email, password);
 
-        SignUp.enqueue(new Callback<>() {
+        SignUp.enqueue(new Callback<ResponseModel>() {
             @Override
             public void onResponse(Call<ResponseModel> call, Response<ResponseModel> response) {
                 String pesan = response.body().getPesan();

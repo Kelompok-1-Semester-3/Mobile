@@ -1,14 +1,15 @@
 package com.example.friendfinderapp;
 
 public class ThumbnailEvent {
-    private String thumbnail_event_name, thumbnail_event_data, category;
-    private int thumbnail_image;
+    private String thumbnail_event_name, thumbnail_event_data, category, thumbnail_image;
+    private int id;
 
-    public ThumbnailEvent(String thumbnail_event_name, String thumbnail_event_data, String category, int thumbnail_image) {
+    public ThumbnailEvent(String thumbnail_event_name, String thumbnail_event_data, String category, String thumbnail_image, int id) {
         this.thumbnail_event_name = thumbnail_event_name;
         this.thumbnail_event_data = thumbnail_event_data;
         this.category = category;
         this.thumbnail_image = thumbnail_image;
+        this.id = id;
     }
 
     public String getThumbnail_event_name() {
@@ -35,11 +36,19 @@ public class ThumbnailEvent {
         this.category = category;
     }
 
-    public int getThumbnail_image() {
+    public String getThumbnail_image() {
         return thumbnail_image;
     }
 
-    public void setThumbnail_image(int thumbnail_image) {
+    public void setThumbnail_image(String thumbnail_image) {
         this.thumbnail_image = thumbnail_image;
+    }
+
+    public int getId() {
+        return id;
+    }
+
+    public void setId(int id) {
+        this.id = id;
     }
 }

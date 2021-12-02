@@ -9,12 +9,15 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
-import java.util.ArrayList;
+import com.bumptech.glide.Glide;
+import com.example.friendfinderapp.Constants.ConfigurationAll;
+
+import java.util.List;
 
 public class ThumbnailEventAdapter extends RecyclerView.Adapter<ThumbnailEventAdapter.ThumbnailEventViewHolder> {
-    private ArrayList<ThumbnailEvent> thumbnailEvents;
+    private List<ThumbnailEvent> thumbnailEvents;
 
-    public ThumbnailEventAdapter(ArrayList<ThumbnailEvent> thumbnailEvents) {
+    public ThumbnailEventAdapter(List<ThumbnailEvent> thumbnailEvents) {
         this.thumbnailEvents = thumbnailEvents;
     }
 
@@ -31,7 +34,8 @@ public class ThumbnailEventAdapter extends RecyclerView.Adapter<ThumbnailEventAd
         holder.txt_thumbnail_event_name.setText(thumbnailEvents.get(position).getThumbnail_event_name());
         holder.txt_thumbnail_event_date.setText(thumbnailEvents.get(position).getThumbnail_event_data());
         holder.txt_category.setText(thumbnailEvents.get(position).getCategory());
-        holder.img_thumbnail_image.setImageResource(thumbnailEvents.get(position).getThumbnail_image());
+        Glide.with(holder.itemView).load(ConfigurationAll.ImageURL + thumbnailEvents.get(position).getThumbnail_image()).into(holder.img_thumbnail_image);
+//        holder.img_thumbnail_image.setImageResource(thumbnailEvents.get(position).getThumbnail_image());
     }
 
     @Override

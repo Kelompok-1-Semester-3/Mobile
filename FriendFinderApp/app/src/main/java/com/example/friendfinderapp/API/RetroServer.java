@@ -5,7 +5,7 @@ import retrofit2.converter.gson.GsonConverterFactory;
 
 public class RetroServer {
 
-    public static final String baseUrl = "http://192.168.18.228/friend-finder/public/";
+    public static final String baseUrl = "http://192.168.1.16/friend-finder/public/";
     public static Retrofit retrofit;
 
     public static Retrofit konekRetro(){
