@@ -15,10 +15,7 @@ import com.example.friendfinderapp.API.RetroServer;
 import com.example.friendfinderapp.Home;
 import com.example.friendfinderapp.HomeFragment;
 import com.example.friendfinderapp.Model.ResponseModel;
-import com.example.friendfinderapp.Model.User_Model;
 import com.example.friendfinderapp.R;
-
-import java.util.List;
 
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -26,11 +23,7 @@ import retrofit2.Response;
 
 public class SignIn extends AppCompatActivity {
     private EditText etEmail, etPassword;
-    private TextView Id;
-    private Button btnLogin;
     String email, password;
-    List<User_Model> user;
-    int id;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -39,31 +32,24 @@ public class SignIn extends AppCompatActivity {
 
         etEmail = findViewById(R.id.signinEmail);
         etPassword = findViewById(R.id.signinPassword);
-        btnLogin = findViewById(R.id.btn_sign_in);
-        Id = findViewById(R.id.tv_Id_f);
+        Button btnLogin = findViewById(R.id.btn_sign_in);
 
-        btnLogin.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                email = etEmail.getText().toString();
-                password = etPassword.getText().toString();
-                if (email.trim().length() == 0) {
-                    etEmail.setError("field tidak boleh kosong");
-                } else if (email.trim().length() == 0) {
-                    etEmail.setError("field tidak boleh kosong");
-                } else {
-                    login(email, password);
-                }
+        btnLogin.setOnClickListener(v -> {
+            email = etEmail.getText().toString();
+            password = etPassword.getText().toString();
+            if (email.trim().length() == 0) {
+                etEmail.setError("field tidak boleh kosong");
+            } else if (email.trim().length() == 0) {
+                etEmail.setError("field tidak boleh kosong");
+            } else {
+                login(email, password);
             }
         });
 
         TextView link_sign_up = findViewById(R.id.link_sign_up);
-        link_sign_up.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent intent = new Intent(getApplicationContext(), SignUp.class);
-                startActivity(intent);
-            }
+        link_sign_up.setOnClickListener(v -> {
+            Intent intent = new Intent(getApplicationContext(), SignUp.class);
+            startActivity(intent);
         });
     }
 
