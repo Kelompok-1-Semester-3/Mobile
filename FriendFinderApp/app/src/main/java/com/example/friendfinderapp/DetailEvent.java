@@ -8,6 +8,8 @@ import android.widget.TextView;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import com.example.friendfinderapp.Activity.Home;
+
 public class DetailEvent extends AppCompatActivity {
 
     @Override

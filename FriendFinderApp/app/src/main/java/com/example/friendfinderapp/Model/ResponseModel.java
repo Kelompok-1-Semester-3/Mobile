@@ -3,8 +3,16 @@ package com.example.friendfinderapp.Model;
 import java.util.List;
 
 public class ResponseModel {
-    public List<SignIn_Model> dataUser;
-    public  String pesan;
+    public List<User_Model> dataUser;
+    public  String pesan, fullname;
+
+    public String getFullname() {
+        return fullname;
+    }
+
+    public void setFullname(String fullname) {
+        this.fullname = fullname;
+    }
 
     public String getPesan() {
         return pesan;
@@ -14,10 +22,11 @@ public class ResponseModel {
         this.pesan = pesan;
     }
 
-    public List<SignIn_Model> getDataUser() {
+
+    public List<User_Model> getDataUser() {
         return dataUser;
     }
-    public void setDataUser(List<SignIn_Model> dataUser) {
+    public void setDataUser(List<User_Model> dataUser) {
         this.dataUser = dataUser;
     }
 }

@@ -3,8 +3,10 @@
   <component name="DesignSurface">
     <option name="filePathToZoomLevelMap">
       <map>
+        <entry key="..\:/APK_Program/AS/Mobile/FriendFinderApp/app/src/main/res/layout/activity_home.xml" value="0.15" />
         <entry key="..\:/APK_Program/AS/Mobile/FriendFinderApp/app/src/main/res/layout/activity_sign_in.xml" value="0.13333333333333333" />
         <entry key="..\:/APK_Program/AS/Mobile/FriendFinderApp/app/src/main/res/layout/activity_sign_up.xml" value="0.17777777777777778" />
+        <entry key="..\:/APK_Program/AS/Mobile/FriendFinderApp/app/src/main/res/layout/fragment_home.xml" value="0.15" />
         <entry key="..\:/APK_Program/AS/Mobile/FriendFinderApp/app/src/main/res/xml/network_security_config.xml" value="0.17777777777777778" />
       </map>
     </option>
