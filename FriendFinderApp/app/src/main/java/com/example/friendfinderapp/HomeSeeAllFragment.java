@@ -20,7 +20,6 @@ import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
-import com.example.friendfinderapp.Constants.ConfigurationAll;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -91,7 +90,7 @@ public class HomeSeeAllFragment extends Fragment implements EventAdapter.OnEvent
 
     // add event item
         private void addEventItem() {
-        StringRequest stringRequest = new StringRequest(Request.Method.GET, ConfigurationAll.EVENT_URL, new Response.Listener<String>() {
+        StringRequest stringRequest = new StringRequest(Request.Method.GET, HomeFragment.EVENT_URL, new Response.Listener<String>() {
             @Override
             public void onResponse(String response) {
                 try {

@@ -18,7 +18,6 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.android.volley.Request;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
-import com.example.friendfinderapp.Constants.ConfigurationAll;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -37,13 +36,14 @@ public class HomeFragment extends Fragment implements EventAdapter.OnEventListen
     private List<ThumbnailEvent> thumbnailEvents = new ArrayList<>();
     private ArrayList<Category> categories;
     private List<Event> events = new ArrayList<>();
-    private List<ThumbnailPlace> thumbnailPlaces = new ArrayList<>();
+    private ArrayList<ThumbnailPlace> thumbnailPlaces;
 
     // recycler view init
-    RecyclerView recyclerViewEvent, recyclerViewThumbnailEvent, recyclerViewThumbnailPlace;
+    RecyclerView recyclerViewEvent, recyclerViewThumbnailEvent;
 
     // url for get all event data
-
+    public static final String EVENT_URL = "http://192.168.1.16/friend-finder/public/API/getAllEvent";
+    public static final String THUMBNAIL_EVENT_URL = "http://192.168.1.16/friend-finder/public/API/getEventThumbnail";
     public static String username;
 
     @Override
@@ -85,16 +85,20 @@ public class HomeFragment extends Fragment implements EventAdapter.OnEventListen
 
         // thumbnail places
         addThumbnailPlaceItem();
-        recyclerViewThumbnailPlace = view.findViewById(R.id.recycle_view_place_thumbnail);
+        RecyclerView recyclerViewThumbnailPlace = view.findViewById(R.id.recycle_view_place_thumbnail);
         RecyclerView.LayoutManager layoutManagerThumbnailPlace = new LinearLayoutManager(this.getContext(), LinearLayoutManager.HORIZONTAL, false);
         recyclerViewThumbnailPlace.setLayoutManager(layoutManagerThumbnailPlace);
+        ThumbnailPlaceAdapter thumbnailPlaceAdapter = new ThumbnailPlaceAdapter(thumbnailPlaces);
+        recyclerViewThumbnailPlace.setAdapter(thumbnailPlaceAdapter);
+
+
         return view;
     }
 
 
     // add thumbnail event item
     private void addEventThumbnailItem() {
-        StringRequest stringRequest = new StringRequest(Request.Method.GET, ConfigurationAll.THUMBNAIL_EVENT_URL, response -> {
+        StringRequest stringRequest = new StringRequest(Request.Method.GET, THUMBNAIL_EVENT_URL, response -> {
             try {
                 JSONArray thumbnailEventArray = new JSONArray(response);
                 for (int i = 0; i < thumbnailEventArray.length(); i++) {
@@ -131,7 +135,7 @@ public class HomeFragment extends Fragment implements EventAdapter.OnEventListen
 
     // add event item
     private void addEventItem() {
-        StringRequest stringRequest = new StringRequest(Request.Method.GET, ConfigurationAll.EVENT_URL, response -> {
+        StringRequest stringRequest = new StringRequest(Request.Method.GET, EVENT_URL, response -> {
             try {
                 JSONArray eventArray = new JSONArray(response);
                 for (int i = 0; i < eventArray.length(); i++) {
@@ -158,30 +162,10 @@ public class HomeFragment extends Fragment implements EventAdapter.OnEventListen
 
     // add thumbnail place item
     private void addThumbnailPlaceItem() {
-        StringRequest stringRequest = new StringRequest(Request.Method.GET, ConfigurationAll.THUMBNAIL_PLACE_URL, response -> {
-            try {
-                JSONArray thumbnailPlaceArray = new JSONArray(response);
-                for (int i = 0; i < thumbnailPlaceArray.length(); i++) {
-                    JSONObject thumbnailPlaceObject = thumbnailPlaceArray.getJSONObject(i);
-                    int id = thumbnailPlaceObject.getInt("id");
-                    String location = thumbnailPlaceObject.getString("location");
-                    String place_name = thumbnailPlaceObject.getString("place_name");
-                    String place_picture = thumbnailPlaceObject.getString("place_picture");
-                    int price = thumbnailPlaceObject.getInt("price");
-
-                    ThumbnailPlace thumbnailPlace = new ThumbnailPlace(place_name, location, place_picture, id, price);
-                    thumbnailPlaces.add(thumbnailPlace);
-                }
-                ThumbnailPlaceAdapter thumbnailPlaceAdapter = new ThumbnailPlaceAdapter(thumbnailPlaces);
-                recyclerViewThumbnailPlace.setAdapter(thumbnailPlaceAdapter);
-
-            } catch (JSONException e) {
-                e.printStackTrace();
-            }
-
-        }, error -> Toast.makeText(getContext(), error.getMessage(), Toast.LENGTH_SHORT).show());
-
-        Volley.newRequestQueue(getContext()).add(stringRequest);
+        thumbnailPlaces = new ArrayList<>();
+        thumbnailPlaces.add(new ThumbnailPlace("Lapangan Antaraja", "Jl. Sudirman", 100, R.mipmap.place1));
+        thumbnailPlaces.add(new ThumbnailPlace("Lapangan Singasari", "Jl. Jember", 90, R.mipmap.place2));
+        thumbnailPlaces.add(new ThumbnailPlace("Lapangan Andromeda", "Jl. Pandjaitan", 40, R.mipmap.place3));
     }
 
     // event click
