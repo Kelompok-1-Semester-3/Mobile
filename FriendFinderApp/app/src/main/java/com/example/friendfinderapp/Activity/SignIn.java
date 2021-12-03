@@ -66,7 +66,7 @@ public class SignIn extends AppCompatActivity {
                     public void onResponse(Call<ResponseModel> call, Response<ResponseModel> response) {
                         String pesan = response.body().getPesan();
                         String fullname = response.body().getFullname();
-                        Toast.makeText(getApplicationContext(), "Data: " + pesan, Toast.LENGTH_SHORT).show();
+                        Toast.makeText(getApplicationContext(), "Login Berhasil!", Toast.LENGTH_SHORT).show();
                         HomeFragment.username = fullname;
                         Intent intent = new Intent(getApplicationContext(), Home.class);
                         etEmail.setText("");
