@@ -15,19 +15,7 @@ import androidx.navigation.Navigation;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.android.volley.Request;
-import com.android.volley.Response;
-import com.android.volley.VolleyError;
-import com.android.volley.toolbox.StringRequest;
-import com.android.volley.toolbox.Volley;
-import com.example.friendfinderapp.Constants.ConfigurationAll;
-
-import org.json.JSONArray;
-import org.json.JSONException;
-import org.json.JSONObject;
-
 import java.util.ArrayList;
-import java.util.List;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -37,10 +25,7 @@ import java.util.List;
 public class HomeSeeAllFragment extends Fragment implements EventAdapter.OnEventListener {
 
     private ArrayList<Category> categories;
-    private List<Event> events = new ArrayList<>();
-
-    // recycler view init
-    RecyclerView recyclerViewEvent;
+    private ArrayList<Event> events;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -72,7 +57,9 @@ public class HomeSeeAllFragment extends Fragment implements EventAdapter.OnEvent
 
         // event class
         addEventItem();
-        recyclerViewEvent = view.findViewById(R.id.recycle_view_event);
+        RecyclerView recyclerViewEvent = view.findViewById(R.id.recycle_view_event);
+        EventAdapter eventAdapter = new EventAdapter(events, this);
+        recyclerViewEvent.setAdapter(eventAdapter);
         RecyclerView.LayoutManager layoutManagerEvent = new LinearLayoutManager(view.getContext());
         recyclerViewEvent.setLayoutManager(layoutManagerEvent);
 
@@ -90,38 +77,11 @@ public class HomeSeeAllFragment extends Fragment implements EventAdapter.OnEvent
     }
 
     // add event item
-        private void addEventItem() {
-        StringRequest stringRequest = new StringRequest(Request.Method.GET, ConfigurationAll.EVENT_URL, new Response.Listener<String>() {
-            @Override
-            public void onResponse(String response) {
-                try {
-                    JSONArray eventArray = new JSONArray(response);
-                    for (int i = 0; i < eventArray.length(); i++) {
-                        JSONObject eventsJSONObject = eventArray.getJSONObject(i);
-                        int id = eventsJSONObject.getInt("id");
-                        String name_event = eventsJSONObject.getString("name_event");
-                        String event_start_date = eventsJSONObject.getString("event_start_date");
-                        String event_picture = eventsJSONObject.getString("event_picture");
-
-                        Event event = new Event(name_event, event_picture, event_start_date, id);
-                        events.add(event);
-                    }
-                    EventAdapter eventAdapter = new EventAdapter(events, HomeSeeAllFragment.this);
-                    recyclerViewEvent.setAdapter(eventAdapter);
-
-                } catch (JSONException e) {
-                    e.printStackTrace();
-                }
-
-            }
-        }, new Response.ErrorListener() {
-            @Override
-            public void onErrorResponse(VolleyError error) {
-                Toast.makeText(getContext(), error.getMessage(), Toast.LENGTH_SHORT).show();
-            }
-        });
-
-        Volley.newRequestQueue(getContext()).add(stringRequest);
+    private void addEventItem() {
+        events = new ArrayList<>();
+        events.add(new Event("Mobile Legend Tournament", "12 Desember 2021", R.mipmap.event1));
+        events.add(new Event("Education Center", "21 Agustus 2021", R.mipmap.event2));
+        events.add(new Event("Just Hangout", "22 April 2021", R.mipmap.event3));
     }
 
     @Override

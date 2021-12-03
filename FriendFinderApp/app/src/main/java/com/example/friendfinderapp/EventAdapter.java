@@ -9,18 +9,14 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.bumptech.glide.Glide;
-import com.example.friendfinderapp.Constants.ConfigurationAll;
-
 import java.util.ArrayList;
-import java.util.List;
 
 public class EventAdapter extends RecyclerView.Adapter<EventAdapter.EventViewHolder> {
 
-    private List<Event> events;
+    private ArrayList<Event> events;
     private OnEventListener onEventListener;
 
-    public EventAdapter(List<Event> events, OnEventListener onEventListener) {
+    public EventAdapter(ArrayList<Event> events, OnEventListener onEventListener) {
         this.events = events;
         this.onEventListener = onEventListener;
     }
@@ -37,8 +33,7 @@ public class EventAdapter extends RecyclerView.Adapter<EventAdapter.EventViewHol
     public void onBindViewHolder(@NonNull EventAdapter.EventViewHolder holder, int position) {
         holder.txt_event_name.setText(events.get(position).getEvent_name());
         holder.txt_event_date.setText(events.get(position).getEvent_date());
-
-        Glide.with(holder.itemView).load(ConfigurationAll.ImageURL + events.get(position).getEvent_image()).into(holder.img_event_image);
+        holder.img_event_image.setImageResource(events.get(position).getEvent_image());
     }
 
     @Override

@@ -1,14 +1,13 @@
 package com.example.friendfinderapp;
 
 public class Event {
-    private String event_name, event_image, event_date;
-    private int id;
+    private String event_name, event_date;
+    private int event_image;
 
-    public Event(String event_name, String event_image, String event_date, int id) {
+    public Event(String event_name, String event_date, int event_image) {
         this.event_name = event_name;
-        this.event_image = event_image;
         this.event_date = event_date;
-        this.id = id;
+        this.event_image = event_image;
     }
 
     public String getEvent_name() {
@@ -19,14 +18,6 @@ public class Event {
         this.event_name = event_name;
     }
 
-    public String getEvent_image() {
-        return event_image;
-    }
-
-    public void setEvent_image(String event_image) {
-        this.event_image = event_image;
-    }
-
     public String getEvent_date() {
         return event_date;
     }
@@ -35,11 +26,11 @@ public class Event {
         this.event_date = event_date;
     }
 
-    public int getId() {
-        return id;
+    public int getEvent_image() {
+        return event_image;
     }
 
-    public void setId(int id) {
-        this.id = id;
+    public void setEvent_image(int event_image) {
+        this.event_image = event_image;
     }
 }

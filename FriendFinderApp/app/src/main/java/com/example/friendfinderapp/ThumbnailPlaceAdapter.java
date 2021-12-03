@@ -9,16 +9,12 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.bumptech.glide.Glide;
-import com.example.friendfinderapp.Constants.ConfigurationAll;
-
 import java.util.ArrayList;
-import java.util.List;
 
 public class ThumbnailPlaceAdapter extends RecyclerView.Adapter<ThumbnailPlaceAdapter.ThumbnailPlaceViewHolder> {
-    private List<ThumbnailPlace> thumbnailPlaces;
+    private ArrayList<ThumbnailPlace> thumbnailPlaces;
 
-    public ThumbnailPlaceAdapter(List<ThumbnailPlace> thumbnailPlaces) {
+    public ThumbnailPlaceAdapter(ArrayList<ThumbnailPlace> thumbnailPlaces) {
         this.thumbnailPlaces = thumbnailPlaces;
     }
 
@@ -35,10 +31,7 @@ public class ThumbnailPlaceAdapter extends RecyclerView.Adapter<ThumbnailPlaceAd
         holder.txt_thumbnail_place_name.setText(thumbnailPlaces.get(position).getThumbnail_place_name());
         holder.txt_thumbnail_place_price.setText("IDR " + String.valueOf(thumbnailPlaces.get(position).getThumbnail_place_price()) + "/Jam");
         holder.txt_thumbnail_place_road.setText(thumbnailPlaces.get(position).getThumbnail_place_road());
-        Glide.with(holder.itemView)
-                .load(ConfigurationAll.ImageURL + thumbnailPlaces.get(position).getThumbnail_place_image())
-                .into(holder.img_thumbnail_place_image);
-//        holder.img_thumbnail_place_image.setImageResource(thumbnailPlaces.get(position).getThumbnail_place_image());
+        holder.img_thumbnail_place_image.setImageResource(thumbnailPlaces.get(position).getThumbnail_place_image());
     }
 
     @Override

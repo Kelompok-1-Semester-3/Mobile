@@ -6,7 +6,7 @@
     android:layout_height="match_parent"
     android:layout_margin="30dp"
     android:orientation="vertical"
-    tools:context=".Activity.SignUp">
+    tools:context=".SignUp">
 
     <TextView
         android:layout_width="wrap_content"
@@ -27,7 +27,6 @@
         android:textSize="16dp" />
 
     <EditText
-        android:id="@+id/edFullname"
         android:layout_width="match_parent"
         android:layout_height="40dp"
         android:layout_marginTop="70dp"
@@ -40,20 +39,6 @@
         android:textSize="14dp" />
 
     <EditText
-        android:id="@+id/edPhone"
-        android:layout_width="match_parent"
-        android:layout_height="40dp"
-        android:layout_marginTop="10dp"
-        android:background="@drawable/custom_input"
-        android:fontFamily="@font/poppinsregular"
-        android:hint="No Telepon"
-        android:inputType="textEmailAddress"
-        android:paddingStart="16dp"
-        android:textColor="@color/black"
-        android:textSize="14dp" />
-
-    <EditText
-        android:id="@+id/edEmail"
         android:layout_width="match_parent"
         android:layout_height="40dp"
         android:layout_marginTop="10dp"
@@ -66,7 +51,6 @@
         android:textSize="14dp" />
 
     <EditText
-        android:id="@+id/edPassword"
         android:layout_width="match_parent"
         android:layout_height="40dp"
         android:layout_marginTop="10dp"
@@ -79,10 +63,10 @@
         android:textSize="14dp" />
 
     <Button
-        android:id="@+id/btn_sign_up"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="40dp"
+        android:id="@+id/btn_sign_up"
         android:background="@drawable/button_primary"
         android:fontFamily="@font/poppinsmedium"
         android:text="Sign Up"
@@ -90,7 +74,7 @@
         android:textColor="@color/white"
         android:textSize="16dp" />
 
-    <!--TextView
+    <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="center_horizontal"
@@ -98,8 +82,8 @@
         android:fontFamily="@font/poppinsregular"
         android:text="Or continue with email"
         android:textColor="@color/darkGrey"
-        android:textSize="14dp" /-->
-    <!--
+        android:textSize="14dp" />
+
     <LinearLayout
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -150,13 +134,11 @@
                 android:src="@drawable/icons8_facebook_100px" />
         </androidx.cardview.widget.CardView>
     </LinearLayout>
-    -->
 
     <LinearLayout
+        android:layout_gravity="center_horizontal"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_gravity="center_horizontal"
-        android:layout_marginTop="30dp"
         android:orientation="horizontal">
 
         <TextView
@@ -169,13 +151,13 @@
             android:textSize="14dp" />
 
         <TextView
-            android:id="@+id/link_sign_in"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center_horizontal"
-            android:layout_marginStart="6dp"
             android:fontFamily="@font/poppinsmedium"
+            android:layout_marginStart="6dp"
             android:text="Sign In"
+            android:id="@+id/link_sign_in"
             android:textColor="@color/blue"
             android:textSize="14dp" />
 
