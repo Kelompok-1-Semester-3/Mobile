@@ -1,50 +1,40 @@
 package com.example.friendfinderapp;
 
 import android.app.Activity;
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
-import android.view.LayoutInflater;
-import android.view.View;
-import android.view.ViewGroup;
-import android.widget.TextView;
-import android.widget.Toast;
 
+import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentManager;
+import androidx.fragment.app.FragmentTransaction;
 import androidx.navigation.NavController;
 import androidx.navigation.Navigation;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.android.volley.Request;
-import com.android.volley.toolbox.StringRequest;
-import com.android.volley.toolbox.Volley;
-import com.example.friendfinderapp.Constants.ConfigurationAll;
-
-import org.json.JSONArray;
-import org.json.JSONException;
-import org.json.JSONObject;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.ViewGroup;
+import android.widget.LinearLayout;
+import android.widget.TextView;
+import android.widget.Toast;
 
 import java.util.ArrayList;
-import java.util.List;
 
 /**
  * A simple {@link Fragment} subclass.
  * Use the  factory method to
  * create an instance of this fragment.
  */
-public class HomeFragment extends Fragment implements EventAdapter.OnEventListener {
+public class HomeFragment extends Fragment implements EventAdapter.OnEventListener{
 
-    private List<ThumbnailEvent> thumbnailEvents = new ArrayList<>();
+    private ArrayList<ThumbnailEvent> thumbnailEvents;
     private ArrayList<Category> categories;
-    private List<Event> events = new ArrayList<>();
-    private List<ThumbnailPlace> thumbnailPlaces = new ArrayList<>();
-
-    // recycler view init
-    RecyclerView recyclerViewEvent, recyclerViewThumbnailEvent, recyclerViewThumbnailPlace;
-
-    // url for get all event data
-
-    public static String username;
+    private ArrayList<Event> events;
+    private ArrayList<ThumbnailPlace> thumbnailPlaces;
+    private TextView txt_link_seeAll_event;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -53,19 +43,20 @@ public class HomeFragment extends Fragment implements EventAdapter.OnEventListen
         View view = inflater.inflate(R.layout.fragment_home, container, false);
 
         // init
-        TextView tvNama = view.findViewById(R.id.tvNama);
-        if (username.length() > 0) {
-            tvNama.setText(username);
-        }
-        TextView txt_link_seeAll_event = view.findViewById(R.id.txt_link_seeAll_event);
-        txt_link_seeAll_event.setOnClickListener(v -> {
-            NavController navController = Navigation.findNavController((Activity) view.getContext(), R.id.fragment);
-            navController.navigate(R.id.homeSeeAllFragment2);
+        txt_link_seeAll_event = view.findViewById(R.id.txt_link_seeAll_event);
+        txt_link_seeAll_event.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                NavController navController = Navigation.findNavController((Activity) view.getContext(), R.id.fragment);
+                navController.navigate(R.id.homeSeeAllFragment2);
+            }
         });
 
         // thumbnail event
         addEventThumbnailItem();
-        recyclerViewThumbnailEvent = view.findViewById(R.id.recycle_view_event_thumbnail);
+        RecyclerView recyclerViewThumbnailEvent = view.findViewById(R.id.recycle_view_event_thumbnail);
+        ThumbnailEventAdapter thumbnailEventAdapter = new ThumbnailEventAdapter(thumbnailEvents);
+        recyclerViewThumbnailEvent.setAdapter(thumbnailEventAdapter);
         RecyclerView.LayoutManager layoutManagerThumbnailEven = new LinearLayoutManager(this.getContext(), LinearLayoutManager.HORIZONTAL, false);
         recyclerViewThumbnailEvent.setLayoutManager(layoutManagerThumbnailEven);
 
@@ -79,45 +70,31 @@ public class HomeFragment extends Fragment implements EventAdapter.OnEventListen
 
         // event class
         addEventItem();
-        recyclerViewEvent = view.findViewById(R.id.recycle_view_event);
+        RecyclerView recyclerViewEvent = view.findViewById(R.id.recycle_view_event);
+        EventAdapter eventAdapter = new EventAdapter(events, this);
+        recyclerViewEvent.setAdapter(eventAdapter);
         RecyclerView.LayoutManager layoutManagerEvent = new LinearLayoutManager(view.getContext());
         recyclerViewEvent.setLayoutManager(layoutManagerEvent);
 
         // thumbnail places
         addThumbnailPlaceItem();
-        recyclerViewThumbnailPlace = view.findViewById(R.id.recycle_view_place_thumbnail);
+        RecyclerView recyclerViewThumbnailPlace = view.findViewById(R.id.recycle_view_place_thumbnail);
         RecyclerView.LayoutManager layoutManagerThumbnailPlace = new LinearLayoutManager(this.getContext(), LinearLayoutManager.HORIZONTAL, false);
         recyclerViewThumbnailPlace.setLayoutManager(layoutManagerThumbnailPlace);
+        ThumbnailPlaceAdapter thumbnailPlaceAdapter = new ThumbnailPlaceAdapter(thumbnailPlaces);
+        recyclerViewThumbnailPlace.setAdapter(thumbnailPlaceAdapter);
+
+
         return view;
     }
 
 
     // add thumbnail event item
     private void addEventThumbnailItem() {
-        StringRequest stringRequest = new StringRequest(Request.Method.GET, ConfigurationAll.THUMBNAIL_EVENT_URL, response -> {
-            try {
-                JSONArray thumbnailEventArray = new JSONArray(response);
-                for (int i = 0; i < thumbnailEventArray.length(); i++) {
-                    JSONObject thumbnailEventsJSONObject = thumbnailEventArray.getJSONObject(i);
-                    int id = thumbnailEventsJSONObject.getInt("id");
-                    String name_event = thumbnailEventsJSONObject.getString("name_event");
-                    String event_start_date = thumbnailEventsJSONObject.getString("event_start_date");
-                    String event_picture = thumbnailEventsJSONObject.getString("event_picture");
-                    String category = thumbnailEventsJSONObject.getString("category");
-
-                    ThumbnailEvent thumbnailEvent = new ThumbnailEvent(name_event, event_start_date, category, event_picture, id);
-                    thumbnailEvents.add(thumbnailEvent);
-                }
-                ThumbnailEventAdapter thumbnailEventAdapter = new ThumbnailEventAdapter(thumbnailEvents);
-                recyclerViewThumbnailEvent.setAdapter(thumbnailEventAdapter);
-
-            } catch (JSONException e) {
-                e.printStackTrace();
-            }
-
-        }, error -> Toast.makeText(getContext(), error.getMessage(), Toast.LENGTH_SHORT).show());
-
-        Volley.newRequestQueue(getContext()).add(stringRequest);
+        thumbnailEvents = new ArrayList<>();
+        thumbnailEvents.add(new ThumbnailEvent("Mobile Legend Tournament", "12 Desember 2021", "Sport", R.mipmap.event1));
+        thumbnailEvents.add(new ThumbnailEvent("Education Tech Titan", "21 January 2022", "Sport", R.mipmap.event2));
+        thumbnailEvents.add(new ThumbnailEvent("Hangout On Me!", "22 April 2021", "Sport", R.mipmap.event3));
     }
 
     // add category item
@@ -131,57 +108,18 @@ public class HomeFragment extends Fragment implements EventAdapter.OnEventListen
 
     // add event item
     private void addEventItem() {
-        StringRequest stringRequest = new StringRequest(Request.Method.GET, ConfigurationAll.EVENT_URL, response -> {
-            try {
-                JSONArray eventArray = new JSONArray(response);
-                for (int i = 0; i < eventArray.length(); i++) {
-                    JSONObject eventsJSONObject = eventArray.getJSONObject(i);
-                    int id = eventsJSONObject.getInt("id");
-                    String name_event = eventsJSONObject.getString("name_event");
-                    String event_start_date = eventsJSONObject.getString("event_start_date");
-                    String event_picture = eventsJSONObject.getString("event_picture");
-
-                    Event event = new Event(name_event, event_picture, event_start_date, id);
-                    events.add(event);
-                }
-                EventAdapter eventAdapter = new EventAdapter(events, HomeFragment.this);
-                recyclerViewEvent.setAdapter(eventAdapter);
-
-            } catch (JSONException e) {
-                e.printStackTrace();
-            }
-
-        }, error -> Toast.makeText(getContext(), error.getMessage(), Toast.LENGTH_SHORT).show());
-
-        Volley.newRequestQueue(getContext()).add(stringRequest);
+        events = new ArrayList<>();
+        events.add(new Event("Mobile Legend Tournament", "12 Desember 2021", R.mipmap.event1));
+        events.add(new Event("Education Center", "21 Agustus 2021", R.mipmap.event2));
+        events.add(new Event("Just Hangout", "22 April 2021", R.mipmap.event3));
     }
 
     // add thumbnail place item
     private void addThumbnailPlaceItem() {
-        StringRequest stringRequest = new StringRequest(Request.Method.GET, ConfigurationAll.THUMBNAIL_PLACE_URL, response -> {
-            try {
-                JSONArray thumbnailPlaceArray = new JSONArray(response);
-                for (int i = 0; i < thumbnailPlaceArray.length(); i++) {
-                    JSONObject thumbnailPlaceObject = thumbnailPlaceArray.getJSONObject(i);
-                    int id = thumbnailPlaceObject.getInt("id");
-                    String location = thumbnailPlaceObject.getString("location");
-                    String place_name = thumbnailPlaceObject.getString("place_name");
-                    String place_picture = thumbnailPlaceObject.getString("place_picture");
-                    int price = thumbnailPlaceObject.getInt("price");
-
-                    ThumbnailPlace thumbnailPlace = new ThumbnailPlace(place_name, location, place_picture, id, price);
-                    thumbnailPlaces.add(thumbnailPlace);
-                }
-                ThumbnailPlaceAdapter thumbnailPlaceAdapter = new ThumbnailPlaceAdapter(thumbnailPlaces);
-                recyclerViewThumbnailPlace.setAdapter(thumbnailPlaceAdapter);
-
-            } catch (JSONException e) {
-                e.printStackTrace();
-            }
-
-        }, error -> Toast.makeText(getContext(), error.getMessage(), Toast.LENGTH_SHORT).show());
-
-        Volley.newRequestQueue(getContext()).add(stringRequest);
+        thumbnailPlaces = new ArrayList<>();
+        thumbnailPlaces.add(new ThumbnailPlace("Lapangan Antaraja", "Jl. Sudirman", 100, R.mipmap.place1));
+        thumbnailPlaces.add(new ThumbnailPlace("Lapangan Singasari", "Jl. Jember", 90, R.mipmap.place2));
+        thumbnailPlaces.add(new ThumbnailPlace("Lapangan Andromeda", "Jl. Pandjaitan", 40, R.mipmap.place3));
     }
 
     // event click
