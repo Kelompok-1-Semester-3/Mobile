@@ -2,7 +2,6 @@ package com.example.friendfinderapp.Activity;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
@@ -90,6 +89,8 @@ public class SignIn extends AppCompatActivity {
             public void onFailure(Call<ResponseModel> call, Throwable t) {
                 Toast.makeText(SignIn.this, "Gagal Login " + t.getMessage(), Toast.LENGTH_SHORT).show();
             }
+
+
         });
 
 
